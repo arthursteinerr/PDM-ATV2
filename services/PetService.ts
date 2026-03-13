@@ -20,15 +20,18 @@ class PetService {
 
     if (name.length < 2 || description.length < 2) {
       Alert.alert(
-        "Erro",
-        "O nome e a descrição devem conter pelo menos 2 caracteres.",
+        "Erro! Falta de caracteres!",
+        "O nome e a descrição devem conter pelo menos 2 caracteres!",
       );
     } else if (
       this.Pets.some(
         (pet) => pet.name === name && pet.description === description,
       )
     ) {
-      Alert.alert("Erro", "O nome e a descrição devem ser únicos.");
+      Alert.alert(
+        "Erro! Pets duplicados!",
+        "O nome e a descrição de cada Pet deve ser único!",
+      );
     } else {
       this.Pets.push(newPet);
     }

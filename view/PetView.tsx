@@ -7,19 +7,17 @@ import {
   Modal,
   TextInput,
   Alert,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { Pet } from "../models/Pet";
 import { usePetController } from "../controllers/PetController";
 
 export const PetView: React.FC = () => {
-  const {
-    Pets,
-    dialogVisible,
-    addPet,
-    addDescription,
-    openDialog,
-    closeDialog,
-  } = usePetController();
+  const { Pets, dialogVisible, addPet, openDialog, closeDialog } =
+    usePetController();
+
   const [inputName, setInputName] = useState<string>("");
   const [inputDescription, setInputDescription] = useState<string>("");
 
@@ -28,124 +26,188 @@ export const PetView: React.FC = () => {
       addPet(inputName.trim(), inputDescription.trim());
       setInputName("");
       setInputDescription("");
+      closeDialog();
     } else {
       Alert.alert("Erro", "Digite um nome para o Pet");
     }
   };
 
   const renderPet = ({ Pet }: { Pet: Pet }) => (
-    <View
-      style={{ padding: 16, borderBottomWidth: 1, borderBottomColor: "#ccc" }}
-    >
-      <Text>{Pet.name}</Text>
-      <Text>{Pet.description}</Text>
+    <View style={styles.petItem}>
+      <Text style={styles.petName}>{Pet.name}</Text>
+      <Text style={styles.petDescription}>{Pet.description}</Text>
     </View>
   );
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <TouchableOpacity
-        onPress={openDialog}
-        style={{
-          backgroundColor: "#084f18aa",
-          padding: 12,
-          borderRadius: 4,
-          marginBottom: 16,
-        }}
-      >
-        <Text style={{ color: "white", textAlign: "center" }}>
-          Adicionar Pet
-        </Text>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={openDialog} style={styles.addButton}>
+        <Text style={styles.addButtonText}>Adicionar Pet</Text>
       </TouchableOpacity>
 
       <FlatList
         data={Pets}
         renderItem={({ item }) => renderPet({ Pet: item })}
         keyExtractor={(Pet) => Pet.id}
-        style={{ flex: 1, borderWidth: 1, borderColor: "#ccccccb7", borderRadius: 4 }}
+        style={styles.list}
       />
 
-      <Modal visible={dialogVisible} transparent animationType="slide">
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(0,0,0,0.5)",
-          }}
+      <Modal visible={dialogVisible} transparent animationType="fade">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.modalOverlay}
         >
-          <View
-            style={{
-              width: 300,
-              padding: 20,
-              backgroundColor: "white",
-              borderRadius: 8,
-            }}
-          >
-            <Text style={{ fontSize: 18, marginBottom: 16, textAlign: "center" }}>
-              Adicionar Pet
-            </Text>
+          <View style={styles.modalBox}>
+            <Text style={styles.modalTitle}>Adicionar Pet</Text>
 
             <TextInput
               value={inputName}
               onChangeText={setInputName}
               placeholder="Nome do Pet"
-              style={{
-                borderWidth: 1,
-                borderColor: "#ccc",
-                padding: 8,
-                marginBottom: 16,
-                borderRadius: 4,
-                opacity: 0.8,
-              }}
+              style={styles.input}
             />
 
             <TextInput
               value={inputDescription}
               onChangeText={setInputDescription}
               placeholder="Descrição do Pet"
-              style={{
-                borderWidth: 1,
-                borderColor: "#ccc",
-                padding: 8,
-                marginBottom: 16,
-                borderRadius: 4,
-                opacity: 0.8,
-              }}
+              style={styles.input}
             />
 
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
+            <View style={styles.buttonRow}>
               <TouchableOpacity
                 onPress={closeDialog}
-                style={{
-                  padding: 12,
-                  backgroundColor: "#ccc",
-                  borderRadius: 4,
-                  flex: 0.45,
-                }}
+                style={styles.cancelButton}
               >
-                <Text style={{ textAlign: "center" }}>Cancelar</Text>
+                <Text style={styles.cancelText}>Cancelar</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={handleAddPet}
-                style={{
-                  padding: 12,
-                  backgroundColor: "#084f18aa",
-                  borderRadius: 4,
-                  flex: 0.45,
-                }}
+                style={styles.confirmButton}
               >
-                <Text style={{ color: "white", textAlign: "center" }}>
-                  Adicionar
-                </Text>
+                <Text style={styles.confirmText}>Adicionar</Text>
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#FFF8F0",
+  },
+
+  addButton: {
+    backgroundColor: "#084f18aa",
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 16,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+
+  addButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+  },
+
+  list: {
+    flex: 1,
+  },
+
+  petItem: {
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+    backgroundColor: "#FFFFFF",
+
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+
+  petName: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#3A3A3A",
+  },
+
+  petDescription: {
+    marginTop: 6,
+    fontSize: 14,
+    color: "#777",
+  },
+
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.4)",
+  },
+
+  modalBox: {
+    width: 300,
+    padding: 22,
+    backgroundColor: "white",
+    borderRadius: 14,
+  },
+
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 18,
+    textAlign: "center",
+    color: "#084f18aa",
+  },
+
+  input: {
+    borderWidth: 1,
+    borderColor: "#8caf85b5",
+    padding: 12,
+    marginBottom: 14,
+    borderRadius: 10,
+    backgroundColor: "#FFF",
+  },
+
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  cancelButton: {
+    padding: 12,
+    backgroundColor: "#ECECEC",
+    borderRadius: 8,
+    flex: 0.45,
+  },
+
+  confirmButton: {
+    padding: 12,
+    backgroundColor: "#084f18aa",
+    borderRadius: 8,
+    flex: 0.45,
+  },
+
+  cancelText: {
+    textAlign: "center",
+    fontWeight: "500",
+  },
+
+  confirmText: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "700",
+  },
+});
