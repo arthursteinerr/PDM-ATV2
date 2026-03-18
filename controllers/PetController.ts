@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Pet } from "../models/Pet";
 import PetService from "../services/PetService";
+import { Alert } from "react-native";
 
 export const usePetController = () => {
   const [Pets, setPets] = useState<Pet[]>(PetService.getAllPets());
@@ -16,6 +17,24 @@ export const usePetController = () => {
     setPets(Pets.map((pet) => (pet.id === id ? { ...pet, description } : pet)));
   };
 
+  const deletePet = (id: string) => {
+    Alert.alert(
+      "Confirmação de exclusão",
+      "Tem certeza que deseja excluir este Pet?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => {
+            const updatedPets = PetService.deletePet(id);
+            setPets(updatedPets);
+          },
+        },
+      ],
+    );
+  };
+
   const openDialog = () => setDialogVisible(true);
   const closeDialog = () => setDialogVisible(false);
 
@@ -26,5 +45,6 @@ export const usePetController = () => {
     addDescription,
     openDialog,
     closeDialog,
+    deletePet,
   };
 };

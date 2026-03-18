@@ -14,8 +14,8 @@ class PetService {
   addPet(name: string, description: string): void {
     const newPet: Pet = {
       id: Date.now().toString(),
-      name: name,
-      description: description,
+      name,
+      description,
     };
 
     if (name.length < 2 || description.length < 2) {
@@ -35,6 +35,11 @@ class PetService {
     } else {
       this.Pets.push(newPet);
     }
+  }
+
+  deletePet(id: string): Pet[] {
+    this.Pets = this.Pets.filter((pet) => pet.id !== id);
+    return this.Pets;
   }
 }
 
