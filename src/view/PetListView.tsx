@@ -87,7 +87,6 @@ export const PetListScreen: React.FC = () => {
         </Text>
       </View>
 
-      {/* Action */}
       <View>
         <TouchableOpacity
           onPress={() => navigation.navigate("AddPet")}
@@ -109,5 +108,3 @@ export const PetListScreen: React.FC = () => {
     </View>
   );
 };
-
-//aaa

@@ -103,5 +103,3 @@ const AddPetScreen: React.FC = () => {
 };
 
 export default AddPetScreen;
-
-//aaa
