@@ -1,10 +1,10 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { PetStack } from "./src/navigation/PetStack";
+import { TabNavigator } from "./src/navigation/PetTab";
 
 export default function App() {
   return (
     <NavigationContainer>
-      <PetStack />
+      <TabNavigator />
     </NavigationContainer>
   );
 }
