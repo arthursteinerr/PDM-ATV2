@@ -1,4 +1,5 @@
 import { View, Image, Text, FlatList, ListRenderItem } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../styles/PetStylers";
 
 interface Cat {
@@ -34,13 +35,13 @@ export default function PetCatView() {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={cats}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </SafeAreaView>
   );
 }
